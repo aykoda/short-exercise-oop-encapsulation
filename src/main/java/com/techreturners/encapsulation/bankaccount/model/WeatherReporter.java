@@ -1,52 +1,60 @@
 package com.techreturners.encapsulation.bankaccount.model;
 
 import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 public class WeatherReporter {
 
-    public String location;
-    public double temperature;
+    private  final String LOCATION;
+    private  final double TEMPERATURE;
+    private  Map<String,Double> dbTemparatures;
 
-    public WeatherReporter(String location, double temperature) {
-        this.location = location;
-        this.temperature = temperature;
+    public WeatherReporter(String location)//, double temperature)
+    {
+        this.LOCATION = location;
+        this.TEMPERATURE = TemperatureByCelsius();
     }
 
-    public String print() {
-
-        double newTemp = (9.0 / 5.0) * temperature + 32;
-        return MessageFormat.format("I am in {0} and it is {1}. {2}. The temperature in Fahrenheit is {3}.", location, check1(), check2(), newTemp);
-
+    public double TemperatureByFahrenheit(){
+        return (9.0 / 5.0) * TEMPERATURE + 32;
     }
 
-    public String check1() {
-        if (location == "London") {
+    public String WeatherReporterbyFahrenheit() {
+        return "The temperature in Fahrenheit is " + TemperatureByFahrenheit();
+    }
 
-            return "🌦";
+    public double TemperatureByCelsius(){
+        dbTemparatures = new HashMap<String,Double>();
+        dbTemparatures.put("London",10.0);
+        dbTemparatures.put("California",30.0);
+        dbTemparatures.put("Cape Town",40.0);
 
-        } else if (location == "California") {
+        //connect to DB or API and take the current temperature value by location
+        // dbTemparatures = connectDBWeather(LOCATION);
+        return dbTemparatures.get(LOCATION);
+    }
+    public String WeatherReporterbyCelsius() {
+        return "The temperature in Celsius is "+TEMPERATURE ;
+    }
 
-            return "🌅";
+    private String TouristicTemperature() {
 
-        } else if (location == "Cape Town") {
-
-            return "🌤";
-
+        if (TEMPERATURE > 30) {
+            return "It's too hot!";
+        } else if (TEMPERATURE < 10) {
+            return "It's too cold!";
         }
-        return "🔆";
+        return  "Ahhh...it's just right!";
     }
 
-    public String check2() {
-        if (temperature > 30) {
-
-            return "It's too hot 🥵!";
-
-        } else if (temperature < 10) {
-
-            return "It's too cold 🥶!";
-
-        }
-        return "Ahhh...it's just right 😊!";
+    public String WeatherTouristicReporter(){
+        return MessageFormat.format("The weather prediction for {0} is {1}. {2} {3} {4}",
+                LOCATION,
+                TEMPERATURE,
+                TouristicTemperature(),
+                WeatherReporterbyCelsius(),
+                WeatherReporterbyFahrenheit());
     }
 
 }
